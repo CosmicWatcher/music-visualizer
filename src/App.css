@@ -1,0 +1,22 @@
+html,
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+#canvas-container {
+  width: 100vw;
+  height: 95vh;
+}
+
+.stats {
+  top: 45px !important;
+}
+
+audio {
+  position: fixed;
+  left: 10px;
+  bottom: 0px;
+  width: calc(100% - 20px);
+  height: 50px;
+}
