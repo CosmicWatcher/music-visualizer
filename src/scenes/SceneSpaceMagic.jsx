@@ -47,7 +47,6 @@ export default function SceneSpaceMagic(props) {
         analyser={props.analyser}
       />
       <DistantGalaxy />
-      {/* <fog attach="fog" args={["#303030", 200, 800]} /> */}
       <ambientLight color={'white'} intensity={0.7} />
     </>
   );

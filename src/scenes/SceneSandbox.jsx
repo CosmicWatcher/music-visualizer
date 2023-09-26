@@ -1,27 +1,14 @@
-import { useRef, useEffect, useState } from "react";
-import { useControls } from "leva";
-import { createNoise2D, createNoise3D } from "simplex-noise";
+import { useRef } from 'react';
+import { createNoise2D, createNoise3D } from 'simplex-noise';
 
-import { extend, useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from '@react-three/fiber';
 import {
-  MeshReflectorMaterial,
-  CameraControls,
-  useTexture,
-  useHelper,
-  Environment,
-  shaderMaterial,
   RenderTexture,
   PerspectiveCamera,
-} from "@react-three/drei";
+  useTexture,
+} from '@react-three/drei';
 
-import {
-  DirectionalLightHelper,
-  RepeatWrapping,
-  BackSide,
-  MathUtils,
-  Color,
-  PointsMaterial,
-} from "three";
+import { BackSide, PointsMaterial } from 'three';
 
 //initialise simplex noise instance
 const noise2D = createNoise2D();
@@ -60,10 +47,10 @@ function RenderedTexture(props) {
             aspect={1 / 1}
             position={[0, 0, -5]}
           />
-          <color attach="background" args={["orange"]} />
+          <color attach="background" args={['orange']} />
           <mesh>
             <boxGeometry args={[500, 500, 500, 100, 100, 100]} />
-            <meshStandardMaterial color={"blue"} />
+            <meshStandardMaterial color={'blue'} />
           </mesh>
         </RenderTexture>
       </meshStandardMaterial>
@@ -75,7 +62,7 @@ function RegularSphere(props) {
   const ball = useRef();
 
   const texture = useTexture(
-    "/textures/meteorites-2560x1440-stars-planet-4k-15557.jpg"
+    '/textures/meteorites-2560x1440-stars-planet-4k-15557.jpg'
   );
 
   useFrame((state) => {
@@ -96,7 +83,7 @@ function PointSphere(props) {
   const ball = useRef();
 
   const texture = useTexture(
-    "/textures/jupiter-2560x1440-space-stars-4k-19726.jpg"
+    '/textures/jupiter-2560x1440-space-stars-4k-19726.jpg'
   );
 
   useFrame((state) => {
@@ -166,7 +153,7 @@ function WireSphere(props) {
   return (
     <mesh ref={ball} {...props}>
       <sphereGeometry args={[1, 64, 64]} />
-      <meshBasicMaterial wireframe color={"darkgreen"} side={BackSide} />
+      <meshBasicMaterial wireframe color={'darkgreen'} side={BackSide} />
     </mesh>
   );
 }
