@@ -62,7 +62,8 @@ function RegularSphere(props) {
   const ball = useRef();
 
   const texture = useTexture(
-    '/textures/meteorites-2560x1440-stars-planet-4k-15557.jpg'
+    import.meta.env.BASE_URL +
+      'textures/meteorites-2560x1440-stars-planet-4k-15557.jpg'
   );
 
   useFrame((state) => {
@@ -83,7 +84,8 @@ function PointSphere(props) {
   const ball = useRef();
 
   const texture = useTexture(
-    '/textures/jupiter-2560x1440-space-stars-4k-19726.jpg'
+    import.meta.env.BASE_URL +
+      'textures/jupiter-2560x1440-space-stars-4k-19726.jpg'
   );
 
   useFrame((state) => {

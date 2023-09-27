@@ -16,7 +16,9 @@ import { modulate } from '../utils';
 import useAudioData from '../audio';
 
 export function FantasyRock(props) {
-  const { nodes, materials } = useGLTF('/models/fantasy_rock-transformed.glb');
+  const { nodes, materials } = useGLTF(
+    import.meta.env.BASE_URL + 'models/fantasy_rock-transformed.glb'
+  );
   const rockBase = useRef();
   const rockFloating = useRef();
   const rand = Math.random();
@@ -98,4 +100,6 @@ FantasyRock.propTypes = {
   ]),
 };
 
-useGLTF.preload('/models/fantasy_rock-transformed.glb');
+// useGLTF.preload(
+//   import.meta.env.BASE_URL + 'models/fantasy_rock-transformed.glb'
+// );

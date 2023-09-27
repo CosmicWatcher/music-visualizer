@@ -18,7 +18,8 @@ import useAudioData from '../audio';
 
 export function Pillar(props) {
   const { nodes, materials } = useGLTF(
-    '/models/pillar_with_ancient_runes-transformed.glb'
+    import.meta.env.BASE_URL +
+      'models/pillar_with_ancient_runes-transformed.glb'
   );
   const pillar = useRef();
   const audioData = useAudioData(props.analyser);
@@ -68,4 +69,6 @@ Pillar.propTypes = {
   ]),
 };
 
-useGLTF.preload('/models/pillar_with_ancient_runes-transformed.glb');
+// useGLTF.preload(
+//   import.meta.env.BASE_URL + 'models/pillar_with_ancient_runes-transformed.glb'
+// );

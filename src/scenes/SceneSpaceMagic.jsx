@@ -105,7 +105,8 @@ function MovingObjects({ id, ...props }) {
 
 function MyEnv() {
   const texture = useTexture(
-    '/textures/jeremy-perkins-uhjiu8FjnsQ-unsplash-cloned.jpg'
+    import.meta.env.BASE_URL +
+      'textures/jeremy-perkins-uhjiu8FjnsQ-unsplash-cloned.jpg'
   );
 
   texture.repeat.set(6, 5);
@@ -134,13 +135,21 @@ function MyEnv() {
 
 function AlienPanelsMaterial() {
   const txtProps = useTexture({
-    metalnessMap: '/textures/alien-panels-bl/alien-panels_metallic.png',
-    map: '/textures/alien-panels-bl/alien-panels_albedo.png',
-    aoMap: '/textures/alien-panels-bl/alien-panels_ao.png',
-    // displacementMap: "/textures/alien-panels-bl/alien-panels_height.png",
-    normalMap: '/textures/alien-panels-bl/alien-panels_normal-ogl.png',
-    roughnessMap: '/textures/alien-panels-bl/alien-panels_roughness.png',
-    // displacementMap: "/textures/dirt.jpg",
+    metalnessMap:
+      import.meta.env.BASE_URL +
+      'textures/alien-panels-bl/alien-panels_metallic.png',
+    map:
+      import.meta.env.BASE_URL +
+      'textures/alien-panels-bl/alien-panels_albedo.png',
+    aoMap:
+      import.meta.env.BASE_URL + 'textures/alien-panels-bl/alien-panels_ao.png',
+    // displacementMap: import.meta.env.BASE_URL + 'textures/alien-panels-bl/alien-panels_height.png',
+    normalMap:
+      import.meta.env.BASE_URL +
+      'textures/alien-panels-bl/alien-panels_normal-ogl.png',
+    roughnessMap:
+      import.meta.env.BASE_URL +
+      'textures/alien-panels-bl/alien-panels_roughness.png',
   });
   Object.values(txtProps).forEach((element) => {
     element.repeat.set(10, 20);
@@ -180,14 +189,14 @@ function AlienPanelsMaterial() {
 //     box.current.rotation.y += 0.01 * state.pointer.x;
 //   });
 
-//   const mtCp = useTexture("/textures/161B1F_C7E0EC_90A5B3_7B8C9B-512px.png");
+//   const mtCp = useTexture(import.meta.env.BASE_URL + "textures/161B1F_C7E0EC_90A5B3_7B8C9B-512px.png");
 
 //   const txtProps = useTexture({
-//     map: "/textures/space-cruiser-panels2-bl/space-cruiser-panels2_albedo.png",
+//     map: import.meta.env.BASE_URL + "textures/space-cruiser-panels2-bl/space-cruiser-panels2_albedo.png",
 //     bumpMap:
-//       "/textures/space-cruiser-panels2-bl/space-cruiser-panels2_height.png",
+//       import.meta.env.BASE_URL + "textures/space-cruiser-panels2-bl/space-cruiser-panels2_height.png",
 //     normalMap:
-//       "/textures/space-cruiser-panels2-bl/space-cruiser-panels2_normal-ogl.png",
+//       import.meta.env.BASE_URL + "textures/space-cruiser-panels2-bl/space-cruiser-panels2_normal-ogl.png",
 //   });
 
 //   return (
