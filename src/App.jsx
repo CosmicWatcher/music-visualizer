@@ -68,7 +68,7 @@ export default function App() {
   return (
     <>
       <div id="canvas-container">
-        {location == '/' && (
+        {location == import.meta.env.BASE_URL && (
           <Canvas
             camera={{ fov: 45, position: [0, -1, 11], far: 5000 }}
             gl={{ logarithmicDepthBuffer: true }}
@@ -85,7 +85,7 @@ export default function App() {
             <Stats showPanel={1} className="stats" />
           </Canvas>
         )}
-        {location == '/item/01' && (
+        {location == import.meta.env.BASE_URL + 'item/01' && (
           <Canvas
             camera={{ fov: 45, position: [0, -1, 11], far: 5000 }}
             // gl={{ logarithmicDepthBuffer: true }}
