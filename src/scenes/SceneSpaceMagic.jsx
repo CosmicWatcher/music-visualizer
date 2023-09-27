@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { useControls } from 'leva';
 import { createNoise2D, createNoise3D } from 'simplex-noise';
 
 import { extend, useFrame } from '@react-three/fiber';
