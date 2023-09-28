@@ -157,22 +157,29 @@ function AlienPanelsMaterial() {
   });
 
   return (
-    <MeshReflectorMaterial
-      resolution={2048}
-      blur={[1000, 1000]}
-      mixBlur={0.2}
-      mixStrength={10}
-      mirror={0.3}
-      roughness={25}
-      metalness={20}
+    <meshStandardMaterial
+      roughness={5}
+      metalness={15}
       normalScale={[0, 1]}
-      depthScale={0.1}
-      depthToBlurRatioBias={0.1}
-      minDepthThreshold={0.9}
-      maxDepthThreshold={1}
       color={'#781431'}
       {...txtProps}
     />
+    // <MeshReflectorMaterial
+    //   resolution={2048}
+    //   blur={[1000, 1000]}
+    //   mixBlur={0.2}
+    //   mixStrength={10}
+    //   mirror={0.3}
+    //   roughness={25}
+    //   metalness={20}
+    //   normalScale={[0, 1]}
+    //   depthScale={0.1}
+    //   depthToBlurRatioBias={0.1}
+    //   minDepthThreshold={0.9}
+    //   maxDepthThreshold={1}
+    //   color={'#781431'}
+    //   {...txtProps}
+    // />
   );
 }
 
