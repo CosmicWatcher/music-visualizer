@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { createNoise2D, createNoise3D } from 'simplex-noise';
+import { createNoise3D } from 'simplex-noise';
 
 import { useFrame } from '@react-three/fiber';
 import {
@@ -11,7 +11,6 @@ import {
 import { BackSide, PointsMaterial } from 'three';
 
 //initialise simplex noise instance
-const noise2D = createNoise2D();
 const noise3D = createNoise3D();
 
 export default function SceneSandbox() {

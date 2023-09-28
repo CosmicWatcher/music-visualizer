@@ -1,21 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
-import { useRoute, useLocation } from 'wouter';
-import { easing, geometry } from 'maath';
+import { useEffect, useRef } from 'react';
+import { useLocation } from 'wouter';
+import { geometry } from 'maath';
 import './App.css';
 import { FFTSIZE, SAMPLERATE } from './config';
 
-import { Canvas, extend, useFrame } from '@react-three/fiber';
-import {
-  CameraControls,
-  Effects,
-  MeshPortalMaterial,
-  Stats,
-  StatsGl,
-  useCursor,
-} from '@react-three/drei';
+import { Canvas, extend } from '@react-three/fiber';
+import { CameraControls, Effects, Stats, StatsGl } from '@react-three/drei';
 
 import { UnrealBloomPass } from 'three-stdlib';
-import { DoubleSide } from 'three';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 
@@ -75,7 +67,7 @@ export default function App() {
             shadows={'soft'}
           >
             {/* <HandleAudio audio={audio} /> */}
-            <SceneSpaceMagic analyser={analyserRef} />
+            <SceneSpaceMagic analyser={analyserRef} audio={audioRef} />
             <MyCameraControls />
             <Effects disableGamma>
               <unrealBloomPass threshold={0.05} strength={0.3} radius={0.01} />

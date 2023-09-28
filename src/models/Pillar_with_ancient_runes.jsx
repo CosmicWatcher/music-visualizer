@@ -22,12 +22,16 @@ export function Pillar(props) {
       'models/pillar_with_ancient_runes-transformed.glb'
   );
   const pillar = useRef();
-  const audioData = useAudioData(props.analyser);
+  const audioData = useAudioData(props.audio, props.analyser);
 
   useFrame((state) => {
     let time = state.clock.getElapsedTime();
 
-    if (props.analyser.current != null) {
+    if (
+      props.audio.current != null &&
+      !props.audio.current.paused &&
+      !props.audio.current.ended
+    ) {
       let x = audioData.current.treb;
 
       let emissivity = 1;
@@ -64,6 +68,10 @@ export function Pillar(props) {
 Pillar.propTypes = {
   zRotation: PropTypes.number,
   analyser: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.any }),
+  ]),
+  audio: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.any }),
   ]),

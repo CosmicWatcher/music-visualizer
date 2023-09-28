@@ -1,6 +1,5 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef } from 'react';
 import { PropTypes } from 'prop-types';
-import { createNoise2D, createNoise3D } from 'simplex-noise';
 
 import { extend, useFrame } from '@react-three/fiber';
 import {
@@ -20,10 +19,6 @@ import distantGalaxyFrag from '../shaders/distantGalaxyMaterial.frag';
 
 const planeLength = 300;
 
-//initialise simplex noise instance
-const noise2D = createNoise2D();
-const noise3D = createNoise3D();
-
 export default function SceneSpaceMagic(props) {
   return (
     <>
@@ -39,11 +34,13 @@ export default function SceneSpaceMagic(props) {
         id={1}
         position={[0, -5, -150 - planeLength]}
         analyser={props.analyser}
+        audio={props.audio}
       />
       <MovingObjects
         id={0}
         position={[0, -5, -150]}
         analyser={props.analyser}
+        audio={props.audio}
       />
       <DistantGalaxy />
       <ambientLight color={'white'} intensity={0.7} />
@@ -83,6 +80,7 @@ function MovingObjects({ id, ...props }) {
               position={[-25, -20, -30 * i + 150]}
               zRotation={Math.PI / 2}
               analyser={props.analyser}
+              audio={props.audio}
             />
           );
         })}
@@ -95,6 +93,7 @@ function MovingObjects({ id, ...props }) {
               position={[25, -20, -30 * i + 150]}
               zRotation={Math.PI / 2}
               analyser={props.analyser}
+              audio={props.audio}
             />
           );
         })}
@@ -283,11 +282,19 @@ SceneSpaceMagic.propTypes = {
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.any }),
   ]),
+  audio: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.any }),
+  ]),
 };
 MovingObjects.propTypes = {
   id: PropTypes.number,
   position: PropTypes.arrayOf(PropTypes.number),
   analyser: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.any }),
+  ]),
+  audio: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.any }),
   ]),

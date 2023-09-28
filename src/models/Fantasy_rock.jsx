@@ -22,7 +22,7 @@ export function FantasyRock(props) {
   const rockBase = useRef();
   const rockFloating = useRef();
   const rand = Math.random();
-  const audioData = useAudioData(props.analyser);
+  const audioData = useAudioData(props.audio, props.analyser);
 
   useFrame((state) => {
     let time = state.clock.getElapsedTime();
@@ -46,7 +46,11 @@ export function FantasyRock(props) {
 
     // rockFloating.current.position.y = 0.7 * Math.sin(time);
 
-    if (props.analyser.current != null) {
+    if (
+      props.audio.current != null &&
+      !props.audio.current.paused &&
+      !props.audio.current.ended
+    ) {
       let x = audioData.current.treb;
 
       let emissivity = 1;
@@ -95,6 +99,10 @@ export function FantasyRock(props) {
 FantasyRock.propTypes = {
   zRotation: PropTypes.number,
   analyser: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.any }),
+  ]),
+  audio: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.any }),
   ]),

@@ -1,8 +1,8 @@
-import { useRef } from "react";
-import { LowPassFilter, analyzeAudioData } from "./utils";
-import { addEffect } from "@react-three/fiber";
+import { useRef } from 'react';
+import { LowPassFilter, analyzeAudioData } from './utils';
+import { addEffect } from '@react-three/fiber';
 
-export default function useAudioData(analyser) {
+export default function useAudioData(audio, analyser) {
   const freqDataArray = useRef(null);
   const bassSmoothed = useRef(new LowPassFilter());
   const midSmoothed = useRef(new LowPassFilter());
@@ -20,7 +20,11 @@ export default function useAudioData(analyser) {
   });
 
   addEffect(() => {
-    if (analyser.current != null) {
+    if (
+      audio.current != null &&
+      !audio.current.paused &&
+      !audio.current.ended
+    ) {
       if (freqDataArray.current == null) {
         freqDataArray.current = new Uint8Array(
           analyser.current.frequencyBinCount
