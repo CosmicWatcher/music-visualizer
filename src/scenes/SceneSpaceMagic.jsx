@@ -1,21 +1,20 @@
-import { useRef } from 'react';
-import { PropTypes } from 'prop-types';
+import { useRef } from "react";
+import { PropTypes } from "prop-types";
 
-import { extend, useFrame } from '@react-three/fiber';
+import { extend, useFrame } from "@react-three/fiber";
 import {
   MeshReflectorMaterial,
   useTexture,
   useHelper,
   Environment,
   shaderMaterial,
-} from '@react-three/drei';
+} from "@react-three/drei";
 
-import { DirectionalLightHelper, RepeatWrapping, BackSide, Color } from 'three';
+import { DirectionalLightHelper, RepeatWrapping, BackSide, Color } from "three";
 
-import { FantasyRock } from '../models/Fantasy_rock';
-import { Pillar } from '../models/Pillar_with_ancient_runes';
-import distantGalaxyVert from '../shaders/distantGalaxyMaterial.vert';
-import distantGalaxyFrag from '../shaders/distantGalaxyMaterial.frag';
+import { FantasyRock } from "../models/Fantasy_rock";
+import { Pillar } from "../models/Pillar_with_ancient_runes";
+import distantGalaxyFrag from "../shaders/distantGalaxyMaterial.frag";
 
 const planeLength = 300;
 
@@ -43,7 +42,7 @@ export default function SceneSpaceMagic(props) {
         audio={props.audio}
       />
       <DistantGalaxy />
-      <ambientLight color={'white'} intensity={0.7} />
+      <ambientLight color={"white"} intensity={0.7} />
     </>
   );
 }
@@ -105,7 +104,7 @@ function MovingObjects({ id, ...props }) {
 function MyEnv() {
   const texture = useTexture(
     import.meta.env.BASE_URL +
-      'textures/jeremy-perkins-uhjiu8FjnsQ-unsplash-cloned.jpg'
+      "textures/jeremy-perkins-uhjiu8FjnsQ-unsplash-cloned.jpg"
   );
 
   texture.repeat.set(6, 5);
@@ -136,19 +135,19 @@ function AlienPanelsMaterial() {
   const txtProps = useTexture({
     metalnessMap:
       import.meta.env.BASE_URL +
-      'textures/alien-panels-bl/alien-panels_metallic.png',
+      "textures/alien-panels-bl/alien-panels_metallic.png",
     map:
       import.meta.env.BASE_URL +
-      'textures/alien-panels-bl/alien-panels_albedo.png',
+      "textures/alien-panels-bl/alien-panels_albedo.png",
     aoMap:
-      import.meta.env.BASE_URL + 'textures/alien-panels-bl/alien-panels_ao.png',
+      import.meta.env.BASE_URL + "textures/alien-panels-bl/alien-panels_ao.png",
     // displacementMap: import.meta.env.BASE_URL + 'textures/alien-panels-bl/alien-panels_height.png',
     normalMap:
       import.meta.env.BASE_URL +
-      'textures/alien-panels-bl/alien-panels_normal-ogl.png',
+      "textures/alien-panels-bl/alien-panels_normal-ogl.png",
     roughnessMap:
       import.meta.env.BASE_URL +
-      'textures/alien-panels-bl/alien-panels_roughness.png',
+      "textures/alien-panels-bl/alien-panels_roughness.png",
   });
   Object.values(txtProps).forEach((element) => {
     element.repeat.set(10, 20);
@@ -160,7 +159,7 @@ function AlienPanelsMaterial() {
       roughness={5}
       metalness={15}
       normalScale={[0, 1]}
-      color={'#781431'}
+      color={"#781431"}
       {...txtProps}
     />
     // <MeshReflectorMaterial
@@ -250,10 +249,14 @@ function MyFloatingRock(props) {
 const DistantGalaxyMaterial = shaderMaterial(
   {
     uTime: 0,
-    uColorStart: new Color('hotpink'),
-    uColorEnd: new Color('black'),
+    uColorStart: new Color("hotpink"),
+    uColorEnd: new Color("black"),
   },
-  distantGalaxyVert,
+  `varying vec2 vUv;
+   void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+   }`,
   distantGalaxyFrag
 );
 
@@ -266,7 +269,7 @@ function DistantGalaxy() {
 
   return (
     <mesh scale={13} position={[0, 1500, -4500]}>
-      <planeGeometry args={[100, 100, 500, 500]} />
+      <planeGeometry args={[100, 100, 1, 1]} />
       <distantGalaxyMaterial
         key={DistantGalaxy.key}
         ref={ref}
