@@ -1,18 +1,27 @@
-import { useEffect, useRef } from 'react';
-import { useLocation } from 'wouter';
-import { geometry } from 'maath';
-import './App.css';
-import { FFTSIZE, SAMPLERATE } from './config';
+import { Suspense, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
+import { geometry } from "maath";
+import "./App.css";
+import { FFTSIZE, SAMPLERATE } from "./config";
 
-import { Canvas, extend } from '@react-three/fiber';
-import { CameraControls, Effects, Stats, StatsGl } from '@react-three/drei';
+import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
+import {
+  CameraControls,
+  Effects,
+  Stats,
+  StatsGl,
+  Text,
+  shaderMaterial,
+  useTexture,
+} from "@react-three/drei";
 
-import { UnrealBloomPass } from 'three-stdlib';
-import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass';
-import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+import { UnrealBloomPass } from "three-stdlib";
+import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass";
+import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 
-import SceneSpaceMagic from './scenes/SceneSpaceMagic';
-import SceneSandbox from './scenes/SceneSandbox';
+import SceneSpaceMagic from "./scenes/SceneSpaceMagic";
+import SceneSandbox from "./scenes/SceneSandbox";
+import loadingFrag from "./shaders/loadingMaterial.frag";
 
 extend(geometry);
 extend({ UnrealBloomPass, OutputPass });
@@ -42,11 +51,11 @@ export default function App() {
   useEffect(() => {
     const gui = new GUI();
     let obj = {
-      'Choose an audio file': function () {
+      "Choose an audio file": function () {
         if (audioRef.current == null)
-          audioRef.current = document.getElementById('audio');
-        let input = document.createElement('input');
-        input.setAttribute('type', 'file');
+          audioRef.current = document.getElementById("audio");
+        let input = document.createElement("input");
+        input.setAttribute("type", "file");
         input.click();
         input.onchange = (e) => {
           setupAudio(e);
@@ -54,36 +63,50 @@ export default function App() {
         };
       },
     };
-    gui.add(obj, 'Choose an audio file');
+    gui.add(obj, "Choose an audio file");
   });
 
   return (
     <>
       <div id="canvas-container">
         {location == import.meta.env.BASE_URL && (
+          // <Suspense
+          //   fallback={
+          //     <div id="loading">
+          //       <h1>Loading...</h1>
+          //     </div>
+          //   }
+          // >
           <Canvas
             camera={{ fov: 45, position: [0, -1, 11], far: 5000 }}
             gl={{ logarithmicDepthBuffer: true }}
-            shadows={'soft'}
+            shadows={"soft"}
           >
-            {/* <HandleAudio audio={audio} /> */}
-            <SceneSpaceMagic analyser={analyserRef} audio={audioRef} />
-            <MyCameraControls />
-            <Effects disableGamma>
-              <unrealBloomPass threshold={0.05} strength={0.3} radius={0.01} />
-              <outputPass />
-            </Effects>
-            <StatsGl className="statsgl" />
-            <Stats showPanel={1} className="stats" />
+            <Suspense fallback={<Loading />}>
+              {/* <HandleAudio audio={audio} />  */}
+              <SceneSpaceMagic analyser={analyserRef} audio={audioRef} />
+              <MyCameraControls />
+              <Effects disableGamma>
+                <unrealBloomPass
+                  threshold={0.05}
+                  strength={0.3}
+                  radius={0.01}
+                />
+                <outputPass />
+              </Effects>
+              <StatsGl className="statsgl" />
+              <Stats showPanel={1} className="stats" />
+            </Suspense>
           </Canvas>
+          // </Suspense>
         )}
-        {location == import.meta.env.BASE_URL + 'item/01' && (
+        {location == import.meta.env.BASE_URL + "item/01" && (
           <Canvas
             camera={{ fov: 45, position: [0, -1, 11], far: 5000 }}
             // gl={{ logarithmicDepthBuffer: true }}
-            shadows={'soft'}
+            shadows={"soft"}
           >
-            <color attach={'background'} args={['#303030']} />
+            <color attach={"background"} args={["#303030"]} />
             <SceneSandbox />
             <MyCameraControls />
             <StatsGl className="statsgl" />
@@ -96,24 +119,70 @@ export default function App() {
   );
 }
 
+const LoadingMaterial = shaderMaterial(
+  {
+    iTime: 0,
+    PI: Math.PI,
+    screenRatio: 1,
+    pixelSize: 0.01,
+  },
+  `varying vec2 vUv;
+   void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+   }`,
+  loadingFrag
+);
+
+extend({ LoadingMaterial });
+
+function Loading() {
+  const ref = useRef();
+  const state = useThree();
+
+  useFrame((state, delta) => {
+    ref.current.iTime += delta;
+    ref.current.screenRatio = state.viewport.aspect;
+    ref.current.pixelSize =
+      0.0011 *
+      (state.viewport.width <= state.viewport.height
+        ? state.viewport.width
+        : state.viewport.height);
+  });
+
+  return (
+    <mesh rotation={[0.0905, 0, 0]}>
+      <planeGeometry
+        args={[state.viewport.width, state.viewport.height, 1, 1]}
+      />
+      <loadingMaterial
+        key={Loading.key}
+        ref={ref}
+        toneMapped={false}
+        transparent={true}
+      />
+    </mesh>
+  );
+}
+
 function MyCameraControls() {
   const cameraControlsRef = useRef();
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key == 'r') cameraControlsRef.current.reset(true);
-      if (e.key == 'w') cameraControlsRef.current.forward(10, true);
-      if (e.key == 's') cameraControlsRef.current.forward(-10, true);
-      if (e.key == 'a') cameraControlsRef.current.truck(-10, 0, true);
-      if (e.key == 'd') cameraControlsRef.current.truck(10, 0, true);
-      if (e.key == 'Control') cameraControlsRef.current.truck(0, 10, true);
-      if (e.key == ' ') cameraControlsRef.current.truck(0, -10, true);
+      if (e.key == "r") cameraControlsRef.current.reset(true);
+      if (e.key == "w") cameraControlsRef.current.forward(10, true);
+      if (e.key == "s") cameraControlsRef.current.forward(-10, true);
+      if (e.key == "a") cameraControlsRef.current.truck(-10, 0, true);
+      if (e.key == "d") cameraControlsRef.current.truck(10, 0, true);
+      if (e.key == "Control") cameraControlsRef.current.truck(0, 10, true);
+      if (e.key == " ") cameraControlsRef.current.truck(0, -10, true);
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
