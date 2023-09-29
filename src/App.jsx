@@ -10,9 +10,7 @@ import {
   Effects,
   Stats,
   StatsGl,
-  Text,
   shaderMaterial,
-  useTexture,
 } from "@react-three/drei";
 
 import { UnrealBloomPass } from "three-stdlib";
@@ -70,13 +68,6 @@ export default function App() {
     <>
       <div id="canvas-container">
         {location == import.meta.env.BASE_URL && (
-          // <Suspense
-          //   fallback={
-          //     <div id="loading">
-          //       <h1>Loading...</h1>
-          //     </div>
-          //   }
-          // >
           <Canvas
             camera={{ fov: 45, position: [0, -1, 11], far: 5000 }}
             gl={{ logarithmicDepthBuffer: true }}
