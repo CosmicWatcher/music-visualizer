@@ -102,7 +102,7 @@ function MovingObjects({ id, ...props }) {
 }
 
 function MyEnv() {
-  const texture = useTexture(import.meta.env.BASE_URL + "textures/stars4.jpg");
+  const texture = useTexture(import.meta.env.BASE_URL + "textures/stars.jpg");
 
   texture.repeat.set(6, 5);
   texture.wrapS = texture.wrapT = RepeatWrapping;
