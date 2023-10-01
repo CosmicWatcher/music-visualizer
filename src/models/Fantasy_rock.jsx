@@ -8,16 +8,16 @@ Source: https://sketchfab.com/3d-models/fantasy-rock-b8cc5ea579604c54811f14c6f89
 Title: Fantasy Rock
 */
 
-import { useGLTF } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { useRef } from 'react';
-import { PropTypes } from 'prop-types';
-import { modulate } from '../utils';
-import useAudioData from '../audio';
+import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { useRef } from "react";
+import { PropTypes } from "prop-types";
+import { modulate } from "../utils";
+import useAudioData from "../audio";
 
 export function FantasyRock(props) {
   const { nodes, materials } = useGLTF(
-    import.meta.env.BASE_URL + 'models/fantasy_rock-transformed.glb'
+    import.meta.env.BASE_URL + "models/fantasy_rock-transformed.glb"
   );
   const rockBase = useRef();
   const rockFloating = useRef();
@@ -51,7 +51,7 @@ export function FantasyRock(props) {
       !props.audio.current.paused &&
       !props.audio.current.ended
     ) {
-      let x = audioData.current.treb;
+      let x = audioData.current.trebAtt;
 
       let emissivity = 1;
       if (x <= 1.0) emissivity = 1;
@@ -59,7 +59,7 @@ export function FantasyRock(props) {
       rockFloating.current.material.emissiveIntensity =
         emissivity < 15 ? emissivity : 15;
 
-      x = audioData.current.bass;
+      x = audioData.current.bassAtt;
       let scale = 1;
       if (x <= 0.7) scale = 1;
       else if (x >= 1.4) scale = 1.2;
@@ -81,13 +81,13 @@ export function FantasyRock(props) {
   return (
     <group {...props} dispose={null}>
       <mesh
-        geometry={nodes['rocks_03Group10022_0_Material_#25_0'].geometry}
+        geometry={nodes["rocks_03Group10022_0_Material_#25_0"].geometry}
         material={materials.Material_25}
         rotation={[-Math.PI / 2, 0, props.zRotation]}
         ref={rockBase}
       />
       <mesh
-        geometry={nodes['Object001_Material_#26_0'].geometry}
+        geometry={nodes["Object001_Material_#26_0"].geometry}
         material={materials.Material_26}
         rotation={[-Math.PI / 2, 0, 0]}
         ref={rockFloating}

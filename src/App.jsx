@@ -31,9 +31,9 @@ export default function App() {
   const contextRef = useRef(null);
   const analyserRef = useRef(null);
 
-  function setupAudio(e) {
+  function setupAudio(url) {
     // audio = new Audio();
-    audioRef.current.src = URL.createObjectURL(e.target.files[0]);
+    audioRef.current.src = url;
     audioRef.current.load();
     audioRef.current.play();
     if (contextRef.current == null) {
@@ -49,19 +49,28 @@ export default function App() {
   useEffect(() => {
     const gui = new GUI();
     let obj = {
-      "Choose an audio file": function () {
+      "Play sample audio": function () {
+        if (audioRef.current == null)
+          audioRef.current = document.getElementById("audio");
+
+        setupAudio(import.meta.env.BASE_URL + "journey.mp3");
+      },
+    };
+    gui.add(obj, "Play sample audio");
+    let obj2 = {
+      "Select your own audio file": function () {
         if (audioRef.current == null)
           audioRef.current = document.getElementById("audio");
         let input = document.createElement("input");
         input.setAttribute("type", "file");
         input.click();
         input.onchange = (e) => {
-          setupAudio(e);
+          setupAudio(URL.createObjectURL(e.target.files[0]));
           // const url = 'http://streaming.tdiradio.com:8000/house.mp3';
         };
       },
     };
-    gui.add(obj, "Choose an audio file");
+    gui.add(obj2, "Select your own audio file");
   });
 
   return (

@@ -8,18 +8,18 @@ Source: https://sketchfab.com/3d-models/pillar-with-ancient-runes-531bb525783f41
 Title: Pillar with Ancient Runes
 */
 
-import { useRef } from 'react';
-import { useGLTF } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { PropTypes } from 'prop-types';
-import { Vector3 } from 'three';
-import { modulate } from '../utils';
-import useAudioData from '../audio';
+import { useRef } from "react";
+import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { PropTypes } from "prop-types";
+import { Vector3 } from "three";
+import { modulate } from "../utils";
+import useAudioData from "../audio";
 
 export function Pillar(props) {
   const { nodes, materials } = useGLTF(
     import.meta.env.BASE_URL +
-      'models/pillar_with_ancient_runes-transformed.glb'
+      "models/pillar_with_ancient_runes-transformed.glb"
   );
   const pillar = useRef();
   const audioData = useAudioData(props.audio, props.analyser);
@@ -32,7 +32,7 @@ export function Pillar(props) {
       !props.audio.current.paused &&
       !props.audio.current.ended
     ) {
-      let x = audioData.current.treb;
+      let x = audioData.current.trebAtt;
 
       let emissivity = 1;
       if (x <= 1.0) emissivity = 1;
@@ -58,7 +58,7 @@ export function Pillar(props) {
       <mesh
         ref={pillar}
         geometry={nodes.polySurface1_Material002_0.geometry}
-        material={materials['Material.002']}
+        material={materials["Material.002"]}
         rotation={[-Math.PI / 2, 0, props.zRotation]}
       />
     </group>
