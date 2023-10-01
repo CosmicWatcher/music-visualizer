@@ -30,6 +30,7 @@ export default function App() {
   const audioRef = useRef(null);
   const contextRef = useRef(null);
   const analyserRef = useRef(null);
+  const warningConfirm = useRef(false);
 
   function setupAudio(url) {
     // audio = new Audio();
@@ -48,26 +49,47 @@ export default function App() {
 
   useEffect(() => {
     const gui = new GUI();
+
     let obj = {
       "Play sample audio": function () {
         if (audioRef.current == null)
           audioRef.current = document.getElementById("audio");
+        if (
+          !warningConfirm.current &&
+          confirm(
+            "WARNING!\nThese visuals can contain bright flashing lights which might cause issues for those with photosensitive epilepsy"
+          )
+        )
+          warningConfirm.current = true;
 
-        setupAudio(import.meta.env.BASE_URL + "journey.mp3");
+        if (warningConfirm.current)
+          setupAudio(import.meta.env.BASE_URL + "journey.mp3");
       },
     };
     gui.add(obj, "Play sample audio");
+
     let obj2 = {
       "Select your own audio file": function () {
         if (audioRef.current == null)
           audioRef.current = document.getElementById("audio");
-        let input = document.createElement("input");
-        input.setAttribute("type", "file");
-        input.click();
-        input.onchange = (e) => {
-          setupAudio(URL.createObjectURL(e.target.files[0]));
-          // const url = 'http://streaming.tdiradio.com:8000/house.mp3';
-        };
+
+        if (
+          !warningConfirm.current &&
+          confirm(
+            "WARNING!\nThese visuals can contain bright flashing lights which might cause issues for those with photosensitive epilepsy"
+          )
+        )
+          warningConfirm.current = true;
+
+        if (warningConfirm.current) {
+          let input = document.createElement("input");
+          input.setAttribute("type", "file");
+          input.click();
+          input.onchange = (e) => {
+            setupAudio(URL.createObjectURL(e.target.files[0]));
+            // const url = 'http://streaming.tdiradio.com:8000/house.mp3';
+          };
+        }
       },
     };
     gui.add(obj2, "Select your own audio file");
