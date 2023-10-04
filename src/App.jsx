@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { geometry } from "maath";
 import "./App.css";
@@ -8,9 +8,11 @@ import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
 import {
   CameraControls,
   Effects,
+  PerformanceMonitor,
   Stats,
   StatsGl,
   shaderMaterial,
+  usePerformanceMonitor,
 } from "@react-three/drei";
 
 import { UnrealBloomPass } from "three-stdlib";
@@ -31,6 +33,7 @@ export default function App() {
   const contextRef = useRef(null);
   const analyserRef = useRef(null);
   const warningConfirm = useRef(false);
+  const [dpr, setDpr] = useState(1.0);
 
   function setupAudio(url) {
     // audio = new Audio();
@@ -100,11 +103,19 @@ export default function App() {
       <div id="canvas-container">
         {location == import.meta.env.BASE_URL && (
           <Canvas
+            dpr={dpr}
             camera={{ fov: 45, position: [0, -1, 11], far: 5000 }}
             gl={{ logarithmicDepthBuffer: true }}
             shadows={"soft"}
           >
             <Suspense fallback={<Loading />}>
+              <PerformanceMonitor
+                factor={1}
+                bounds={(refreshRate) => [20, refreshRate]}
+                onChange={({ factor }) =>
+                  setDpr(parseFloat((0.5 + 0.5 * factor).toFixed(1)))
+                }
+              />
               {/* <HandleAudio audio={audio} />  */}
               <SceneSpaceMagic analyser={analyserRef} audio={audioRef} />
               <MyCameraControls />
