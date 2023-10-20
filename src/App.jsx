@@ -33,7 +33,7 @@ export default function App() {
   const contextRef = useRef(null);
   const analyserRef = useRef(null);
   const warningConfirm = useRef(false);
-  const [dpr, setDpr] = useState(1.0);
+  const [dpr, setDpr] = useState(1);
 
   function setupAudio(url) {
     // audio = new Audio();
@@ -111,9 +111,9 @@ export default function App() {
             <Suspense fallback={<Loading />}>
               <PerformanceMonitor
                 factor={1}
-                bounds={(refreshRate) => [20, refreshRate]}
+                bounds={(refreshRate) => [30, refreshRate]}
                 onChange={({ factor }) =>
-                  setDpr(parseFloat((0.5 + 0.5 * factor).toFixed(1)))
+                  setDpr(parseFloat((0.2 + 0.8 * factor).toFixed(1)))
                 }
               />
               {/* <HandleAudio audio={audio} />  */}
