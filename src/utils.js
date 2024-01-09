@@ -41,7 +41,7 @@ export function analyzeAudioData(
   bandAtt,
   bandSmoothed
 ) {
-  const freqRanges = [0, 250, 2000, 20000];
+  const freqRanges = [0, 150, 2000, 20000];
   const ranges = freqRanges.map((x) => Math.ceil((FFTSIZE * x) / SAMPLERATE));
 
   analyser.getByteFrequencyData(freqDataArray);
@@ -136,4 +136,12 @@ export function max(arr) {
   return arr.reduce(function (a, b) {
     return Math.max(a, b);
   });
+}
+
+export function gaussian2D(x, y, amplitude, x0, y0, sigmaX, sigmaY) {
+  let exponent = -(
+    Math.pow(x - x0, 2) / (2 * Math.pow(sigmaX, 2)) +
+    Math.pow(y - y0, 2) / (2 * Math.pow(sigmaY, 2))
+  );
+  return amplitude * Math.pow(Math.E, exponent);
 }

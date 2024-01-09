@@ -1,8 +1,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
-import { useLocation } from "wouter";
 import { geometry } from "maath";
 import "./App.css";
-import { FFTSIZE, SAMPLERATE } from "./config";
+import { FFTSIZE, SAMPLERATE, SCENES } from "./config";
 
 import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
 import {
@@ -21,19 +20,25 @@ import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 
 import SceneSpaceMagic from "./scenes/SceneSpaceMagic";
 import SceneSandbox from "./scenes/SceneSandbox";
+import SceneFlatShader from "./scenes/SceneFlatShader";
 import loadingFrag from "./shaders/loadingMaterial.frag";
 
 extend(geometry);
 extend({ UnrealBloomPass, OutputPass });
 
 export default function App() {
-  const [location] = useLocation();
   // const [audio] = useState(new Audio());
   const audioRef = useRef(null);
   const contextRef = useRef(null);
   const analyserRef = useRef(null);
   const warningConfirm = useRef(false);
   const [dpr, setDpr] = useState(1);
+  const [currentScene, setCurrentPage] = useState(SCENES.SANDBOX);
+
+  // Handler function that changes the current page
+  function switchPage(page) {
+    setCurrentPage(page);
+  }
 
   function setupAudio(url) {
     // audio = new Audio();
@@ -53,36 +58,45 @@ export default function App() {
   useEffect(() => {
     const gui = new GUI();
 
-    let obj = {
+    let sampleAudio = {
       "Play sample audio": function () {
         if (audioRef.current == null)
           audioRef.current = document.getElementById("audio");
-        if (
-          !warningConfirm.current &&
-          confirm(
-            "WARNING!\nThese visuals can contain bright flashing lights which might cause issues for those with photosensitive epilepsy"
+
+        if (import.meta.env.PROD) {
+          if (
+            !warningConfirm.current &&
+            confirm(
+              "WARNING!\nThese visuals can contain bright flashing lights which might cause issues for those with photosensitive epilepsy"
+            )
           )
-        )
+            warningConfirm.current = true;
+        } else {
           warningConfirm.current = true;
+        }
 
         if (warningConfirm.current)
           setupAudio(import.meta.env.BASE_URL + "journey.mp3");
       },
     };
-    gui.add(obj, "Play sample audio");
+    gui.add(sampleAudio, "Play sample audio");
 
-    let obj2 = {
+    let yourAudio = {
       "Select your own audio file": function () {
         if (audioRef.current == null)
           audioRef.current = document.getElementById("audio");
 
-        if (
-          !warningConfirm.current &&
-          confirm(
-            "WARNING!\nThese visuals can contain bright flashing lights which might cause issues for those with photosensitive epilepsy"
+        if (import.meta.env.PROD) {
+          if (
+            !warningConfirm.current &&
+            confirm(
+              "WARNING!\nThese visuals can contain bright flashing lights which might cause issues for those with photosensitive epilepsy"
+            )
           )
-        )
+            warningConfirm.current = true;
+        } else {
           warningConfirm.current = true;
+        }
 
         if (warningConfirm.current) {
           let input = document.createElement("input");
@@ -95,13 +109,29 @@ export default function App() {
         }
       },
     };
-    gui.add(obj2, "Select your own audio file");
+    gui.add(yourAudio, "Select your own audio file");
+
+    let obj3 = {
+      "Space Magic": function () {
+        switchPage(SCENES.SPACE_MAGIC);
+      },
+      Sandbox: function () {
+        switchPage(SCENES.SANDBOX);
+      },
+      "2D Shader": function () {
+        switchPage(SCENES.FLAT_SHADER);
+      },
+    };
+    const sceneFolder = gui.addFolder("Select the scene");
+    sceneFolder.add(obj3, "Space Magic");
+    sceneFolder.add(obj3, "Sandbox");
+    sceneFolder.add(obj3, "2D Shader");
   });
 
   return (
     <>
       <div id="canvas-container">
-        {location == import.meta.env.BASE_URL && (
+        {currentScene == SCENES.SPACE_MAGIC && (
           <Canvas
             dpr={dpr}
             camera={{ fov: 45, position: [0, -1, 11], far: 5000 }}
@@ -133,15 +163,23 @@ export default function App() {
           </Canvas>
           // </Suspense>
         )}
-        {location == import.meta.env.BASE_URL + "item/01" && (
+        {currentScene == SCENES.SANDBOX && (
           <Canvas
             camera={{ fov: 45, position: [0, -1, 11], far: 5000 }}
             // gl={{ logarithmicDepthBuffer: true }}
             shadows={"soft"}
           >
             <color attach={"background"} args={["#303030"]} />
-            <SceneSandbox />
+            <SceneSandbox analyser={analyserRef} audio={audioRef} />
             <MyCameraControls />
+            <StatsGl className="statsgl" />
+            <Stats showPanel={1} className="stats" />
+          </Canvas>
+        )}
+        {currentScene == SCENES.FLAT_SHADER && (
+          <Canvas camera={{ fov: 45, position: [0, 0, 0], far: 10 }}>
+            <color attach={"background"} args={["black"]} />
+            <SceneFlatShader analyser={analyserRef} audio={audioRef} />
             <StatsGl className="statsgl" />
             <Stats showPanel={1} className="stats" />
           </Canvas>

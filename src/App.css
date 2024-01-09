@@ -6,7 +6,7 @@ body {
 
 #canvas-container {
   width: 100vw;
-  height: 95vh;
+  height: 100vh;
 }
 
 .stats {
@@ -18,5 +18,5 @@ audio {
   left: 10px;
   bottom: 0px;
   width: calc(100% - 20px);
-  height: 50px;
+  height: 30px;
 }
