@@ -23,7 +23,7 @@ export default function SceneFlatShader(props) {
     matRef.current.iTime = time;
     matRef.current.iWidth = planeRef.current.geometry.parameters.width;
     matRef.current.iHeight = planeRef.current.geometry.parameters.height;
-    matRef.current.iTimeSpeed = 0.2;
+    matRef.current.iTimeSpeed = 0.3;
 
     if (
       props.audio.current != null &&

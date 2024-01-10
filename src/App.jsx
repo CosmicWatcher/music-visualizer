@@ -33,7 +33,9 @@ export default function App() {
   const analyserRef = useRef(null);
   const warningConfirm = useRef(false);
   const [dpr, setDpr] = useState(1);
-  const [currentScene, setCurrentPage] = useState(SCENES.SANDBOX);
+  const [currentScene, setCurrentPage] = useState(
+    import.meta.env.PROD ? SCENES.SPACE_MAGIC : SCENES.SANDBOX
+  );
 
   // Handler function that changes the current page
   function switchPage(page) {
@@ -59,7 +61,7 @@ export default function App() {
     const gui = new GUI();
 
     let sampleAudio = {
-      "Play sample audio": function () {
+      "Play sample music": function () {
         if (audioRef.current == null)
           audioRef.current = document.getElementById("audio");
 
@@ -76,10 +78,10 @@ export default function App() {
         }
 
         if (warningConfirm.current)
-          setupAudio(import.meta.env.BASE_URL + "journey.mp3");
+          setupAudio(import.meta.env.BASE_URL + "sample.mp3");
       },
     };
-    gui.add(sampleAudio, "Play sample audio");
+    gui.add(sampleAudio, "Play sample music");
 
     let yourAudio = {
       "Select your own audio file": function () {
@@ -124,9 +126,9 @@ export default function App() {
     };
     const sceneFolder = gui.addFolder("Select the scene");
     sceneFolder.add(obj3, "Space Magic");
-    sceneFolder.add(obj3, "Sandbox");
     sceneFolder.add(obj3, "2D Shader");
-  });
+    sceneFolder.add(obj3, "Sandbox");
+  }, []);
 
   return (
     <>
@@ -170,6 +172,13 @@ export default function App() {
             shadows={"soft"}
           >
             <color attach={"background"} args={["#303030"]} />
+            <PerformanceMonitor
+              factor={1}
+              bounds={(refreshRate) => [30, refreshRate]}
+              onChange={({ factor }) =>
+                setDpr(parseFloat((0.2 + 0.8 * factor).toFixed(1)))
+              }
+            />
             <SceneSandbox analyser={analyserRef} audio={audioRef} />
             <MyCameraControls />
             <StatsGl className="statsgl" />
@@ -179,6 +188,13 @@ export default function App() {
         {currentScene == SCENES.FLAT_SHADER && (
           <Canvas camera={{ fov: 45, position: [0, 0, 0], far: 10 }}>
             <color attach={"background"} args={["black"]} />
+            <PerformanceMonitor
+              factor={1}
+              bounds={(refreshRate) => [60, refreshRate]}
+              onChange={({ factor }) =>
+                setDpr(parseFloat((0.2 + 0.8 * factor).toFixed(1)))
+              }
+            />
             <SceneFlatShader analyser={analyserRef} audio={audioRef} />
             <StatsGl className="statsgl" />
             <Stats showPanel={1} className="stats" />
